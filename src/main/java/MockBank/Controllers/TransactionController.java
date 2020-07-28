@@ -1,26 +1,16 @@
 package MockBank.Controllers;
 
-import MockBank.Assemblers.CustomerResourceAssembler;
-import MockBank.Assemblers.TransactionResourceAssembler;
 import MockBank.PersistanceModels.Customer;
 import MockBank.PersistanceModels.CustomerAccount;
 import MockBank.PersistanceModels.Transactions;
 import MockBank.Services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
 public class TransactionController {
-
-    @Autowired
-    private CustomerResourceAssembler customerResourceAssembler;
-    @Autowired
-    private TransactionResourceAssembler transactionResourceAssembler;
 
     public TransactionController() {
     }
@@ -41,6 +31,7 @@ public class TransactionController {
         //all transactions for all customer accounts, for future administrative/service desk implementations, NOT required by task
         return transactionService.getTransactions(id);
     }
+
     @PutMapping("/customer/{id}/deposit/{amount}")
     public Customer depositToAccount(@RequestBody CustomerAccount customerAccount, @PathVariable Long id, @PathVariable Long amount) throws Exception {
         //deposit to specific customer account number

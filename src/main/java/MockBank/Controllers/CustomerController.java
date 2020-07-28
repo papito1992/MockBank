@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -33,7 +32,8 @@ public class CustomerController {
     }
 
     @PostMapping("/customer/account/{customerId}")
-    public Customer newCustomerAccount(@PathVariable Long customerId) throws URISyntaxException {
+    public Customer newCustomerAccount(@PathVariable Long customerId) {
+        //create additional account number for an existing user
         Customer customer = customerService.createCustomerAccount(customerId);
         customerRepository.save(customer);
         return customer;
@@ -41,6 +41,7 @@ public class CustomerController {
 
     @GetMapping("/customer/{id}")
     public Resource<Customer> getCustomerById(@PathVariable Long id) {
+        //customer overview by customer id
         Customer customer = customerService.getCustomer(id);
         return customerResourceAssembler.toResource(customer);
     }
@@ -48,6 +49,7 @@ public class CustomerController {
     @GetMapping("/customer/{id}/account/{accountId}/balance")
     public CustomerAccount getCustomerAccountBalanceById1(@PathVariable Long id, @PathVariable Integer accountId) throws Exception {
         //chose accountId instead of actual iban(LT...) for safety.
+        //receive balance of existing customers specific account
         Customer customer = customerService.getCustomer(id);
         CustomerAccount customerAccount = customerService.getCustomerAccount(customer, accountId);
         customerAccount.setTransactions(null);
@@ -56,6 +58,7 @@ public class CustomerController {
 
     @GetMapping("/customer/{id}/account/{accountId}/statement")
     public List<Transactions> getCustomerAccountStatementById(@PathVariable Long id, @PathVariable Integer accountId) throws Exception {
+        //receive statement of existing customers specific account
         Customer customer = customerService.getCustomer(id);
         CustomerAccount customerAccount = customerService.getCustomerAccount(customer, accountId);
         return customerAccount.getTransactions();
